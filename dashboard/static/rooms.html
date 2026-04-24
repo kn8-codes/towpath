@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROOMs — Live Demo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0d0d0d;
+  --panel: #161616;
+  --border: #252525;
+  --text: #e8e8e8;
+  --muted: #555;
+  --accent: #6EE7B7;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  gap: 24px;
+}
+header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 1160px;
+}
+header h1 {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: -0.5px;
+  color: var(--text);
+}
+.tag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.tag.live {
+  color: var(--accent);
+  border-color: var(--accent);
+  animation: tagPulse 2s ease-in-out infinite;
+}
+@keyframes tagPulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+.rooms-grid {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1160px;
+}
+.room-card {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.room-card-header {
+  padding: 12px 16px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.room-name {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.room-role { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.state-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 99px;
+  background: #1a1a1a;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+.state-badge[data-state="idle"]    { color: #6EE7B7; border-color: #6EE7B7; background: rgba(110,231,183,.08); }
+.state-badge[data-state="working"] { color: #FDE68A; border-color: #FDE68A; background: rgba(253,230,138,.08); }
+.state-badge[data-state="error"]   { color: #F87171; border-color: #F87171; background: rgba(248,113,113,.08); }
+.state-badge[data-state="offline"] { color: var(--muted); border-color: var(--border); background: transparent; }
+.state-badge[data-state="clear"]   { color: #93C5FD; border-color: #93C5FD; background: rgba(147,197,253,.08); }
+.state-badge[data-state="cloudy"]  { color: #CBD5E1; border-color: #CBD5E1; background: rgba(203,213,225,.08); }
+.state-badge[data-state="rain"]    { color: #60A5FA; border-color: #60A5FA; background: rgba(96,165,250,.08); }
+.state-badge[data-state="storm"]   { color: #C084FC; border-color: #C084FC; background: rgba(192,132,252,.08); }
+.state-badge[data-state="fog"]     { color: #94A3B8; border-color: #94A3B8; background: rgba(148,163,184,.08); }
+.room-svg-wrap {
+  padding: 0;
+  background: #111;
+}
+.room-svg-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.room-log {
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--muted);
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.room-log .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--muted);
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 1160px;
+}
+.ctrl-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color .2s, color .2s;
+}
+.ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
+.ctrl-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(110,231,183,.07); }
+.cycle-speed { color: var(--muted); font-size: 11px; margin-left: auto; }
+
+/* SVG animation keyframes */
+@keyframes rm-bob    { 0%,100%{transform:translateY(0)}   50%{transform:translateY(-5px)} }
+@keyframes rm-blink  { 0%,85%,100%{transform:scaleY(1)}  90%,95%{transform:scaleY(0.05)} }
+@keyframes rm-type-l { 0%,100%{transform:rotate(0) translate(0,0)} 50%{transform:rotate(-7deg) translate(-2px,5px)} }
+@keyframes rm-type-r { 0%,100%{transform:rotate(0) translate(0,0)} 50%{transform:rotate(7deg) translate(2px,5px)} }
+@keyframes rm-shake  { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-4px)} 40%{transform:translateX(4px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+@keyframes rm-pulse  { 0%,100%{opacity:1} 50%{opacity:.2} }
+@keyframes rm-steam  { 0%{transform:translateY(0);opacity:.6} 100%{transform:translateY(-14px);opacity:0} }
+@keyframes rm-needle { 0%,100%{transform:rotate(-18deg) translate(0,0);transform-origin:94px 213px} 50%{transform:rotate(14deg);transform-origin:94px 213px} }
+@keyframes rm-steer  { 0%,100%{transform:rotate(-6deg);transform-origin:180px 318px} 50%{transform:rotate(6deg);transform-origin:180px 318px} }
+@keyframes rm-scan   { 0%,100%{opacity:.3} 50%{opacity:1} }
+@keyframes rm-tail   { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(38deg)} }
+@keyframes rm-sweat  { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-4px) scale(1.2)} }
+@keyframes rm-rain   { 0%{transform:translateY(-10px);opacity:0} 80%{opacity:.8} 100%{transform:translateY(40px);opacity:0} }
+@keyframes rm-flash  { 0%,89%,100%{opacity:0} 90%,95%{opacity:1} }
+@keyframes rm-wave   { 0%{transform:translateX(0)} 100%{transform:translateX(-4px)} }
+
+/* State-driven SVG classes */
+.state-idle #head-m4, .state-idle #head-m1 { animation: rm-bob 3.2s ease-in-out infinite; transform-origin: center; }
+.state-idle #eye-m4-l, .state-idle #eye-m4-r,
+.state-idle #eye-m1-l, .state-idle #eye-m1-r { animation: rm-blink 4s ease-in-out infinite; transform-origin: center; }
+
+.state-working #arm-m4-l, .state-working #arm-m1-l { animation: rm-type-l 0.55s ease-in-out infinite; transform-origin: 146px 336px; }
+.state-working #arm-m4-r, .state-working #arm-m1-r { animation: rm-type-r 0.55s ease-in-out infinite; transform-origin: 214px 336px; }
+.state-working #head-m4, .state-working #head-m1 { animation: rm-bob 1.2s ease-in-out infinite; transform-origin: center; }
+.state-working #activity-m4-1, .state-working #activity-m4-2, .state-working #activity-m4-3 { animation: rm-pulse 0.7s ease-in-out infinite; }
+.state-working #activity-m4-2 { animation-delay: .15s; }
+.state-working #activity-m4-3 { animation-delay: .3s; }
+.state-working #activity-m1-1, .state-working #activity-m1-2 { animation: rm-pulse 0.7s ease-in-out infinite; }
+.state-working #activity-m1-2 { animation-delay: .2s; }
+.state-working #steam-m1-1, .state-working #steam-m1-2 { animation: rm-steam 1.8s ease-out infinite; }
+.state-working #steam-m1-2 { animation-delay: .7s; }
+
+.state-error #head-m4, .state-error #head-m1 { animation: rm-shake 0.5s ease-in-out infinite; transform-origin: center; }
+.state-error #eye-m4-l, .state-error #eye-m4-r,
+.state-error #eye-m1-l, .state-error #eye-m1-r { animation: rm-pulse 0.5s ease-in-out infinite; transform-origin: center; }
+.state-error #msg-m4, .state-error #msg-m1 { opacity: 1 !important; }
+
+.state-offline #head-m4, .state-offline #head-m1 { opacity: 0.3; }
+.state-offline #lamp-m4, .state-offline #lamp-m1 { opacity: 0.15; }
+
+/* JEEP states */
+.state-idle #horn-jeep { animation: rm-pulse 3s ease-in-out infinite; }
+.state-idle #needle-jeep-l { animation: rm-needle 4s ease-in-out infinite; transform-origin: 94px 213px; }
+.state-idle #needle-jeep-r { animation: rm-needle 4.3s ease-in-out infinite reverse; transform-origin: 266px 213px; }
+.state-idle #head-jeep { animation: rm-bob 3.5s ease-in-out infinite; transform-origin: center; }
+
+.state-working #needle-jeep-l { animation: rm-needle 1.4s ease-in-out infinite; transform-origin: 94px 213px; }
+.state-working #needle-jeep-r { animation: rm-needle 1.2s ease-in-out infinite reverse; transform-origin: 266px 213px; }
+.state-working #horn-jeep { animation: rm-pulse 0.6s ease-in-out infinite; }
+.state-working #head-jeep { animation: rm-bob 1.5s ease-in-out infinite; transform-origin: center; }
+.state-working #arm-jeep-r { animation: rm-steer 1.8s ease-in-out infinite; transform-origin: 200px 170px; }
+
+.state-error #head-jeep { animation: rm-shake 0.4s ease-in-out infinite; transform-origin: center; }
+.state-error #msg-jeep { opacity: 1 !important; }
+.state-error #sig-jeep-1, .state-error #sig-jeep-2, .state-error #sig-jeep-3 { animation: rm-pulse 0.4s ease-in-out infinite; }
+
+.state-offline #head-jeep { opacity: 0.3; }
+.state-offline #needle-jeep-l, .state-offline #needle-jeep-r { opacity: 0.2; }
+.state-offline #sig-jeep-1, .state-offline #sig-jeep-2, .state-offline #sig-jeep-3 { opacity: 0.1; }
+
+/* weather overlays on JEEP */
+.wx-rain-drop { animation: rm-rain 0.9s linear infinite; }
+.wx-flash { animation: rm-flash 3s linear infinite; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ROOMs</h1>
+  <span class="tag live">● live</span>
+  <span class="tag">mock cycler</span>
+</header>
+
+<div class="rooms-grid">
+
+  <!-- M4 -->
+  <div class="room-card" id="card-m4">
+    <div class="room-card-header">
+      <div>
+        <div class="room-name">M4</div>
+        <div class="room-role">operator</div>
+      </div>
+      <span class="state-badge" id="badge-m4" data-state="idle">idle</span>
+    </div>
+    <div class="room-svg-wrap" id="svg-m4">
+      <svg id="room-m4" viewBox="0 0 360 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g id="layer-1">
+          <rect width="360" height="380" fill="#F9A8D4"/>
+          <rect x="0" y="0" width="360" height="220" fill="#FCE7F3"/>
+          <rect x="0" y="220" width="360" height="160" fill="#EC4899"/>
+          <rect x="0" y="220" width="360" height="10" fill="#DB2777"/>
+        </g>
+        <g id="layer-2">
+          <rect x="10" y="12" width="340" height="10" rx="5" fill="#BE185D" stroke="#831843" stroke-width="3"/>
+          <rect x="10" y="20" width="100" height="72" rx="9" fill="#BE185D" stroke="#831843" stroke-width="4"/>
+          <rect x="18" y="28" width="84" height="54" rx="6" fill="#1a0a12"/>
+          <rect id="bar-m4-1a" x="24" y="68" width="10" height="8" rx="2" fill="#F472B6"/>
+          <rect id="bar-m4-1b" x="36" y="60" width="10" height="16" rx="2" fill="#EC4899"/>
+          <rect id="bar-m4-1c" x="48" y="52" width="10" height="24" rx="2" fill="#F472B6"/>
+          <rect id="bar-m4-1d" x="60" y="44" width="10" height="32" rx="2" fill="#EC4899"/>
+          <rect id="bar-m4-1e" x="72" y="56" width="10" height="20" rx="2" fill="#F472B6"/>
+          <rect id="bar-m4-1f" x="84" y="48" width="10" height="28" rx="2" fill="#EC4899"/>
+          <rect x="24" y="34" width="40" height="5" rx="2" fill="#F9A8D4" opacity="0.6"/>
+          <rect x="130" y="20" width="100" height="72" rx="9" fill="#BE185D" stroke="#831843" stroke-width="4"/>
+          <rect x="138" y="28" width="84" height="54" rx="6" fill="#1a0a12"/>
+          <rect x="144" y="36" width="72" height="9" rx="4" fill="#3a0a20"/>
+          <rect id="prog-m4-2a" x="144" y="36" width="54" height="9" rx="4" fill="#F9A8D4"/>
+          <rect x="144" y="49" width="72" height="9" rx="4" fill="#3a0a20"/>
+          <rect id="prog-m4-2b" x="144" y="49" width="30" height="9" rx="4" fill="#F472B6"/>
+          <rect x="144" y="62" width="72" height="9" rx="4" fill="#3a0a20"/>
+          <rect id="prog-m4-2c" x="144" y="62" width="60" height="9" rx="4" fill="#F9A8D4"/>
+          <rect x="250" y="20" width="100" height="72" rx="9" fill="#BE185D" stroke="#831843" stroke-width="4"/>
+          <rect x="258" y="28" width="84" height="54" rx="6" fill="#1a0a12"/>
+          <rect x="264" y="36" width="72" height="9" rx="4" fill="#3a0a20"/>
+          <rect id="prog-m4-3a" x="264" y="36" width="42" height="9" rx="4" fill="#F472B6"/>
+          <rect x="264" y="49" width="72" height="9" rx="4" fill="#3a0a20"/>
+          <rect id="prog-m4-3b" x="264" y="49" width="66" height="9" rx="4" fill="#F9A8D4"/>
+          <rect x="264" y="62" width="72" height="9" rx="4" fill="#3a0a20"/>
+          <rect id="prog-m4-3c" x="264" y="62" width="26" height="9" rx="4" fill="#F472B6"/>
+        </g>
+        <g id="layer-3">
+          <rect x="60" y="106" width="240" height="28" rx="12" fill="#BE185D" stroke="#831843" stroke-width="4"/>
+          <circle id="btn-m4-1" cx="88" cy="120" r="9" fill="#F9A8D4" stroke="#831843" stroke-width="3"/>
+          <circle id="btn-m4-2" cx="112" cy="120" r="9" fill="#FDE68A" stroke="#831843" stroke-width="3"/>
+          <circle id="btn-m4-3" cx="136" cy="120" r="9" fill="#F472B6" stroke="#831843" stroke-width="3"/>
+          <rect x="156" y="112" width="72" height="16" rx="7" fill="#1a0a12"/>
+          <rect id="readout-m4-1" x="160" y="116" width="36" height="5" rx="2" fill="#F472B6"/>
+          <rect x="14" y="170" width="332" height="50" rx="14" fill="#BE185D" stroke="#831843" stroke-width="5"/>
+          <rect x="14" y="170" width="332" height="12" rx="14" fill="#9D174D" stroke="#831843" stroke-width="3"/>
+          <rect x="32" y="218" width="20" height="56" rx="10" fill="#9D174D" stroke="#831843" stroke-width="4"/>
+          <rect x="308" y="218" width="20" height="56" rx="10" fill="#9D174D" stroke="#831843" stroke-width="4"/>
+          <rect x="126" y="178" width="108" height="28" rx="7" fill="#1a0a12" stroke="#831843" stroke-width="3"/>
+          <rect x="132" y="184" width="96" height="6" rx="3" fill="#BE185D" opacity="0.6"/>
+          <rect x="132" y="193" width="96" height="6" rx="3" fill="#BE185D" opacity="0.5"/>
+          <ellipse cx="272" cy="192" rx="16" ry="21" fill="#1a0a12" stroke="#831843" stroke-width="3"/>
+          <path d="M52 210 L56 178 L72 178 L76 210 Z" fill="#FDDBA8" stroke="#831843" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M54 206 L57 186 L71 186 L74 206 Z" fill="#C084FC" opacity="0.85"/>
+          <circle cx="60" cy="204" r="3" fill="#3D1A00"/>
+          <circle cx="65" cy="206" r="3" fill="#3D1A00"/>
+          <circle cx="70" cy="204" r="3" fill="#3D1A00"/>
+          <ellipse cx="64" cy="178" rx="10" ry="4" fill="#FDDBA8" stroke="#831843" stroke-width="2"/>
+          <path d="M54 178 Q64 172 74 178" fill="#FDDBA8" stroke="#831843" stroke-width="2"/>
+          <rect id="straw-m4" x="67" y="152" width="5" height="28" rx="2.5" fill="#F472B6" stroke="#831843" stroke-width="1.5"/>
+        </g>
+        <g id="light-m4">
+          <circle id="lamp-m4" cx="180" cy="8" r="7" fill="#FDE68A" stroke="#831843" stroke-width="2"/>
+        </g>
+        <circle id="status-m4" cx="344" cy="18" r="11" fill="#F9A8D4" stroke="#831843" stroke-width="4"/>
+        <rect id="slot-m4" x="148" y="167" width="64" height="6" rx="3" fill="#831843" opacity="0"/>
+        <rect id="msg-m4" x="154" y="148" width="52" height="14" rx="5" fill="#F472B6" opacity="0"/>
+        <g id="agent-operator">
+          <ellipse id="chair-m4" cx="180" cy="368" rx="50" ry="14" fill="#9D174D" stroke="#831843" stroke-width="4"/>
+          <ellipse cx="180" cy="340" rx="36" ry="38" fill="#7A4A1A" stroke="#111" stroke-width="5"/>
+          <path d="M180 304 C170 304 154 308 148 318 C142 328 144 346 146 358 C154 362 166 364 180 364 Z" fill="#8B5520" stroke="#111" stroke-width="3"/>
+          <path d="M180 304 C190 304 206 308 212 318 C218 328 216 346 214 358 C206 362 194 364 180 364 Z" fill="#8B5520" stroke="#111" stroke-width="3"/>
+          <line x1="180" y1="304" x2="180" y2="364" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+          <path d="M180 304 C174 300 163 302 159 310" stroke="#111" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M180 304 C186 300 197 302 201 310" stroke="#111" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path id="arm-m4-l" d="M146 336C132 330 120 322 108 319" stroke="#111" stroke-width="13" stroke-linecap="round"/>
+          <circle id="hand-m4-l" cx="104" cy="318" r="12" fill="#FFDAB8" stroke="#111" stroke-width="4"/>
+          <path id="arm-m4-r" d="M214 336C228 330 240 322 252 319" stroke="#111" stroke-width="13" stroke-linecap="round"/>
+          <circle id="hand-m4-r" cx="256" cy="318" r="12" fill="#FFDAB8" stroke="#111" stroke-width="4"/>
+          <ellipse id="head-m4" cx="180" cy="278" rx="44" ry="54" fill="#FFDAB8" stroke="#111" stroke-width="5"/>
+          <path id="hat-crown-m4" d="M138 280 C134 266 136 242 145 229 C155 217 168 210 180 210 C192 210 205 217 215 229 C224 242 226 266 222 280 Z" fill="#7A4A1A" stroke="#111" stroke-width="5" stroke-linejoin="round"/>
+          <rect id="hat-cuff-m4" x="130" y="272" width="100" height="24" rx="12" fill="#5C3210" stroke="#111" stroke-width="4"/>
+          <rect x="162" y="276" width="36" height="16" rx="3" fill="#F5F0E8" stroke="#111" stroke-width="2"/>
+          <rect x="166" y="279" width="28" height="10" rx="2" fill="#C8860A"/>
+          <ellipse id="eye-m4-l" cx="162" cy="296" rx="16" ry="17" fill="white" stroke="#111" stroke-width="3"/>
+          <ellipse cx="160" cy="294" rx="11" ry="11" fill="#7C3AED"/>
+          <ellipse cx="160" cy="294" rx="6" ry="6" fill="#111"/>
+          <circle cx="155" cy="290" r="4" fill="white"/>
+          <circle cx="163" cy="298" r="2" fill="white"/>
+          <path d="M147 287C153 282 162 283 167 287" stroke="#111" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <ellipse id="eye-m4-r" cx="198" cy="296" rx="16" ry="17" fill="white" stroke="#111" stroke-width="3"/>
+          <ellipse cx="200" cy="294" rx="11" ry="11" fill="#7C3AED"/>
+          <ellipse cx="200" cy="294" rx="6" ry="6" fill="#111"/>
+          <circle cx="195" cy="290" r="4" fill="white"/>
+          <circle cx="203" cy="298" r="2" fill="white"/>
+          <path d="M193 287C197 283 206 282 212 287" stroke="#111" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <ellipse id="mouth-m4" cx="180" cy="316" rx="9" ry="11" fill="#111"/>
+          <ellipse cx="180" cy="316" rx="7" ry="8.5" fill="#c0605a"/>
+        </g>
+        <g id="activity-m4">
+          <circle id="activity-m4-1" cx="144" cy="120" r="5" fill="#F9A8D4" opacity="0.4"/>
+          <circle id="activity-m4-2" cx="160" cy="120" r="5" fill="#F9A8D4" opacity="0.4"/>
+          <circle id="activity-m4-3" cx="176" cy="120" r="5" fill="#F9A8D4" opacity="0.4"/>
+        </g>
+        <!-- error overlay -->
+        <rect id="err-flash-m4" x="0" y="0" width="360" height="380" fill="#F87171" opacity="0" rx="0"/>
+        <!-- offline overlay -->
+        <rect id="offline-overlay-m4" x="0" y="0" width="360" height="380" fill="#000" opacity="0" rx="0"/>
+      </svg>
+    </div>
+    <div class="room-log" id="log-m4">
+      <span class="dot" id="dot-m4"></span>
+      <span id="log-text-m4">initialising…</span>
+    </div>
+  </div>
+
+  <!-- M1 -->
+  <div class="room-card" id="card-m1">
+    <div class="room-card-header">
+      <div>
+        <div class="room-name">M1</div>
+        <div class="room-role">worker</div>
+      </div>
+      <span class="state-badge" id="badge-m1" data-state="idle">idle</span>
+    </div>
+    <div class="room-svg-wrap" id="svg-m1">
+      <svg id="room-m1" viewBox="0 0 360 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g id="layer-1">
+          <rect width="360" height="380" fill="#4C1D95"/>
+          <rect x="0" y="0" width="360" height="230" fill="#EDE9FE"/>
+          <rect x="0" y="230" width="360" height="150" fill="#4C1D95"/>
+          <rect x="0" y="230" width="360" height="10" fill="#3B0764"/>
+        </g>
+        <g id="layer-2">
+          <rect x="8" y="0" width="20" height="160" rx="10" fill="#FB923C" stroke="#7C2D12" stroke-width="4"/>
+          <circle cx="18" cy="22" r="8" fill="#FED7AA" stroke="#7C2D12" stroke-width="3"/>
+          <circle cx="18" cy="62" r="6" fill="#EA580C" stroke="#7C2D12" stroke-width="3"/>
+          <circle cx="18" cy="102" r="6" fill="#EA580C" stroke="#7C2D12" stroke-width="3"/>
+          <rect x="28" y="92" width="36" height="10" rx="5" fill="#FB923C" stroke="#7C2D12" stroke-width="3"/>
+          <rect x="332" y="0" width="20" height="160" rx="10" fill="#FB923C" stroke="#7C2D12" stroke-width="4"/>
+          <circle cx="342" cy="22" r="8" fill="#FED7AA" stroke="#7C2D12" stroke-width="3"/>
+          <circle cx="342" cy="62" r="6" fill="#EA580C" stroke="#7C2D12" stroke-width="3"/>
+          <circle cx="342" cy="102" r="6" fill="#EA580C" stroke="#7C2D12" stroke-width="3"/>
+          <rect x="296" y="92" width="36" height="10" rx="5" fill="#FB923C" stroke="#7C2D12" stroke-width="3"/>
+          <rect x="32" y="12" width="296" height="10" rx="5" fill="#6D28D9" stroke="#3B0764" stroke-width="3"/>
+          <rect x="32" y="20" width="100" height="72" rx="9" fill="#6D28D9" stroke="#3B0764" stroke-width="4"/>
+          <rect x="40" y="28" width="84" height="54" rx="6" fill="#1E1033"/>
+          <polyline id="wave-m1" points="46,72 52,56 58,66 64,44 70,60 76,50 82,64 88,46 94,58 100,54 106,68 112,62 118,70" fill="none" stroke="#A78BFA" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="46" y="34" width="36" height="5" rx="2" fill="#C4B5FD" opacity="0.5"/>
+          <rect x="130" y="20" width="100" height="72" rx="9" fill="#6D28D9" stroke="#3B0764" stroke-width="4"/>
+          <rect x="138" y="28" width="84" height="54" rx="6" fill="#1E1033"/>
+          <rect x="144" y="36" width="72" height="9" rx="4" fill="#2e1065"/>
+          <rect id="prog-m1-2a" x="144" y="36" width="54" height="9" rx="4" fill="#C4B5FD"/>
+          <rect x="144" y="49" width="72" height="9" rx="4" fill="#2e1065"/>
+          <rect id="prog-m1-2b" x="144" y="49" width="30" height="9" rx="4" fill="#A78BFA"/>
+          <rect x="144" y="62" width="72" height="9" rx="4" fill="#2e1065"/>
+          <rect id="prog-m1-2c" x="144" y="62" width="60" height="9" rx="4" fill="#C4B5FD"/>
+          <rect x="228" y="20" width="100" height="72" rx="9" fill="#6D28D9" stroke="#3B0764" stroke-width="4"/>
+          <rect x="236" y="28" width="84" height="54" rx="6" fill="#1E1033"/>
+          <rect x="242" y="36" width="72" height="9" rx="4" fill="#2e1065"/>
+          <rect id="prog-m1-3a" x="242" y="36" width="42" height="9" rx="4" fill="#A78BFA"/>
+          <rect x="242" y="49" width="72" height="9" rx="4" fill="#2e1065"/>
+          <rect id="prog-m1-3b" x="242" y="49" width="66" height="9" rx="4" fill="#C4B5FD"/>
+          <rect x="242" y="62" width="72" height="9" rx="4" fill="#2e1065"/>
+          <rect id="prog-m1-3c" x="242" y="62" width="28" height="9" rx="4" fill="#A78BFA"/>
+        </g>
+        <g id="layer-3">
+          <rect x="96" y="108" width="168" height="30" rx="12" fill="#6D28D9" stroke="#3B0764" stroke-width="4"/>
+          <circle id="btn-m1-1" cx="118" cy="123" r="9" fill="#FF4444" stroke="#3B0764" stroke-width="3"/>
+          <circle id="btn-m1-2" cx="142" cy="123" r="9" fill="#FDE68A" stroke="#3B0764" stroke-width="3"/>
+          <circle id="btn-m1-3" cx="166" cy="123" r="9" fill="#C4B5FD" stroke="#3B0764" stroke-width="3"/>
+          <circle id="btn-m1-4" cx="190" cy="123" r="9" fill="#FB923C" stroke="#3B0764" stroke-width="3"/>
+          <circle id="btn-m1-5" cx="214" cy="123" r="9" fill="#F9A8D4" stroke="#3B0764" stroke-width="3"/>
+          <circle id="btn-m1-6" cx="238" cy="123" r="9" fill="#A78BFA" stroke="#3B0764" stroke-width="3"/>
+          <rect x="14" y="178" width="332" height="50" rx="14" fill="#92400E" stroke="#111" stroke-width="5"/>
+          <rect x="14" y="178" width="332" height="12" rx="14" fill="#78350F" stroke="#111" stroke-width="3"/>
+          <line x1="60" y1="180" x2="58" y2="226" stroke="#78350F" stroke-width="1.5" opacity="0.5"/>
+          <line x1="120" y1="180" x2="122" y2="226" stroke="#78350F" stroke-width="1.5" opacity="0.5"/>
+          <line x1="200" y1="180" x2="200" y2="226" stroke="#78350F" stroke-width="1.5" opacity="0.5"/>
+          <line x1="280" y1="180" x2="278" y2="226" stroke="#78350F" stroke-width="1.5" opacity="0.5"/>
+          <rect x="32" y="226" width="20" height="62" rx="10" fill="#78350F" stroke="#111" stroke-width="4"/>
+          <rect x="308" y="226" width="20" height="62" rx="10" fill="#78350F" stroke="#111" stroke-width="4"/>
+          <rect x="48" y="188" width="44" height="12" rx="6" fill="#FB923C" stroke="#111" stroke-width="3"/>
+          <circle cx="48" cy="194" r="9" fill="#FB923C" stroke="#111" stroke-width="3"/>
+          <rect x="136" y="186" width="120" height="28" rx="7" fill="#1E1033" stroke="#3B0764" stroke-width="3"/>
+          <rect x="142" y="192" width="108" height="6" rx="3" fill="#6D28D9" opacity="0.6"/>
+          <rect x="142" y="201" width="108" height="6" rx="3" fill="#6D28D9" opacity="0.5"/>
+          <path d="M306 226 L310 196 L326 196 L330 226 Z" fill="#F5E6D3" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M307 218 L310 206 L326 206 L329 218 Z" fill="#8B4513"/>
+          <ellipse cx="318" cy="196" rx="10" ry="4" fill="#D4C5B0" stroke="#111" stroke-width="2"/>
+          <path d="M308 196 Q318 190 328 196" fill="#D4C5B0" stroke="#111" stroke-width="2"/>
+          <path id="steam-m1-1" d="M314 188 Q316 183 314 178" stroke="#EDE9FE" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path id="steam-m1-2" d="M320 186 Q322 181 320 176" stroke="#EDE9FE" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </g>
+        <g id="light-m1">
+          <circle id="lamp-m1" cx="180" cy="8" r="7" fill="#FDE68A" stroke="#6D28D9" stroke-width="2"/>
+        </g>
+        <circle id="status-m1" cx="344" cy="18" r="11" fill="#C4B5FD" stroke="#3B0764" stroke-width="4"/>
+        <rect id="slot-m1" x="148" y="175" width="64" height="6" rx="3" fill="#3B0764" opacity="0"/>
+        <rect id="msg-m1" x="154" y="156" width="52" height="14" rx="5" fill="#A78BFA" opacity="0"/>
+        <g id="agent-worker">
+          <ellipse id="chair-m1" cx="180" cy="368" rx="48" ry="14" fill="#3B0764" stroke="#111" stroke-width="4"/>
+          <ellipse cx="180" cy="340" rx="36" ry="38" fill="#7A4A1A" stroke="#111" stroke-width="5"/>
+          <path d="M180 304 C170 304 154 308 148 318 C142 328 144 346 146 358 C154 362 166 364 180 364 Z" fill="#8B5520" stroke="#111" stroke-width="3"/>
+          <path d="M180 304 C190 304 206 308 212 318 C218 328 216 346 214 358 C206 362 194 364 180 364 Z" fill="#8B5520" stroke="#111" stroke-width="3"/>
+          <line x1="180" y1="304" x2="180" y2="364" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+          <path d="M180 304 C174 300 163 302 159 310" stroke="#111" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M180 304 C186 300 197 302 201 310" stroke="#111" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path id="arm-m1-l" d="M146 336C132 330 120 322 108 319" stroke="#111" stroke-width="13" stroke-linecap="round"/>
+          <circle id="hand-m1-l" cx="104" cy="318" r="12" fill="#FFDAB8" stroke="#111" stroke-width="4"/>
+          <path id="arm-m1-r" d="M214 336C228 330 240 322 252 319" stroke="#111" stroke-width="13" stroke-linecap="round"/>
+          <circle id="hand-m1-r" cx="256" cy="318" r="12" fill="#FFDAB8" stroke="#111" stroke-width="4"/>
+          <ellipse id="head-m1" cx="180" cy="278" rx="44" ry="54" fill="#FFDAB8" stroke="#111" stroke-width="5"/>
+          <path id="hat-crown-m1" d="M138 280 C134 266 136 242 145 229 C155 217 168 210 180 210 C192 210 205 217 215 229 C224 242 226 266 222 280 Z" fill="#7A4A1A" stroke="#111" stroke-width="5" stroke-linejoin="round"/>
+          <rect id="hat-cuff-m1" x="130" y="272" width="100" height="24" rx="12" fill="#5C3210" stroke="#111" stroke-width="4"/>
+          <rect x="162" y="276" width="36" height="16" rx="3" fill="#F5F0E8" stroke="#111" stroke-width="2"/>
+          <rect x="166" y="279" width="28" height="10" rx="2" fill="#C8860A"/>
+          <ellipse id="eye-m1-l" cx="162" cy="296" rx="16" ry="17" fill="white" stroke="#111" stroke-width="3"/>
+          <ellipse cx="160" cy="294" rx="11" ry="11" fill="#7C3AED"/>
+          <ellipse cx="160" cy="294" rx="6" ry="6" fill="#111"/>
+          <circle cx="155" cy="290" r="4" fill="white"/>
+          <circle cx="163" cy="298" r="2" fill="white"/>
+          <path d="M147 287C153 282 162 283 167 287" stroke="#111" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <ellipse id="eye-m1-r" cx="198" cy="296" rx="16" ry="17" fill="white" stroke="#111" stroke-width="3"/>
+          <ellipse cx="200" cy="294" rx="11" ry="11" fill="#7C3AED"/>
+          <ellipse cx="200" cy="294" rx="6" ry="6" fill="#111"/>
+          <circle cx="195" cy="290" r="4" fill="white"/>
+          <circle cx="203" cy="298" r="2" fill="white"/>
+          <path d="M193 287C197 283 206 282 212 287" stroke="#111" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <ellipse id="mouth-m1" cx="180" cy="316" rx="9" ry="11" fill="#111"/>
+          <ellipse cx="180" cy="316" rx="7" ry="8.5" fill="#c0605a"/>
+        </g>
+        <g id="activity-m1">
+          <circle id="activity-m1-1" cx="118" cy="123" r="4" fill="#C4B5FD" opacity="0.4"/>
+          <circle id="activity-m1-2" cx="138" cy="123" r="4" fill="#C4B5FD" opacity="0.4"/>
+        </g>
+        <!-- error / offline overlays -->
+        <rect id="err-flash-m1" x="0" y="0" width="360" height="380" fill="#F87171" opacity="0"/>
+        <rect id="offline-overlay-m1" x="0" y="0" width="360" height="380" fill="#000" opacity="0"/>
+      </svg>
+    </div>
+    <div class="room-log" id="log-m1">
+      <span class="dot" id="dot-m1"></span>
+      <span id="log-text-m1">initialising…</span>
+    </div>
+  </div>
+
+  <!-- JEEP -->
+  <div class="room-card" id="card-jeep">
+    <div class="room-card-header">
+      <div>
+        <div class="room-name">JEEP</div>
+        <div class="room-role">driver</div>
+      </div>
+      <span class="state-badge" id="badge-jeep" data-state="idle">idle</span>
+    </div>
+    <div class="room-svg-wrap" id="svg-jeep">
+      <svg id="room-jeep" viewBox="0 0 360 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g id="layer-1">
+          <rect width="360" height="380" fill="#1C2B1C"/>
+          <rect x="0" y="0" width="360" height="54" fill="#2D3B2D"/>
+          <rect x="0" y="0" width="34" height="380" fill="#1A271A" stroke="#0A150A" stroke-width="3"/>
+          <rect x="326" y="0" width="34" height="380" fill="#1A271A" stroke="#0A150A" stroke-width="3"/>
+        </g>
+        <g id="layer-2">
+          <rect x="34" y="10" width="292" height="116" rx="14" fill="#4B6B4B" stroke="#0A150A" stroke-width="5"/>
+          <rect id="wx-sky-jeep" x="44" y="20" width="272" height="100" rx="10" fill="#1A3A4A"/>
+          <rect x="44" y="20" width="272" height="64" fill="#1A3A4A"/>
+          <rect x="44" y="74" width="272" height="46" fill="#1B4A1B"/>
+          <rect x="44" y="20" width="272" height="28" fill="#2D4A6A" opacity="0.5"/>
+          <rect x="126" y="92" width="108" height="28" fill="#263238"/>
+          <circle cx="72" cy="72" r="18" fill="#1B4A1B"/>
+          <circle cx="62" cy="64" r="12" fill="#1E5C1E"/>
+          <circle cx="82" cy="64" r="14" fill="#215E21"/>
+          <circle cx="72" cy="56" r="10" fill="#256225"/>
+          <circle cx="100" cy="60" r="22" fill="#1A4A1A"/>
+          <circle cx="90" cy="52" r="15" fill="#1E5C1E"/>
+          <circle cx="110" cy="54" r="16" fill="#215E21"/>
+          <circle cx="264" cy="70" r="20" fill="#1B4A1B"/>
+          <circle cx="254" cy="62" r="14" fill="#1E5C1E"/>
+          <circle cx="276" cy="64" r="16" fill="#215E21"/>
+          <circle cx="290" cy="60" r="20" fill="#1A4A1A"/>
+          <circle cx="280" cy="52" r="16" fill="#1E5C1E"/>
+          <rect x="44" y="20" width="272" height="100" rx="10" fill="#0A1A0A" opacity="0.4"/>
+          <!-- weather overlay layer -->
+          <g id="wx-overlay-jeep"></g>
+        </g>
+        <g id="layer-3">
+          <rect x="34" y="172" width="292" height="86" rx="12" fill="#2D3B2D" stroke="#0A150A" stroke-width="5"/>
+          <rect x="34" y="172" width="292" height="20" rx="12" fill="#1A271A" stroke="#0A150A" stroke-width="4"/>
+          <circle cx="94" cy="213" r="30" fill="#1A271A" stroke="#0A150A" stroke-width="4"/>
+          <circle cx="94" cy="213" r="22" fill="#111811"/>
+          <path id="needle-jeep-l" d="M94 213L78 195" stroke="#6EE7B7" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="94" cy="213" r="5" fill="#4B6B4B"/>
+          <line x1="68" y1="199" x2="75" y2="205" stroke="#4B6B4B" stroke-width="2"/>
+          <line x1="94" y1="186" x2="94" y2="192" stroke="#4B6B4B" stroke-width="2"/>
+          <line x1="120" y1="199" x2="113" y2="205" stroke="#4B6B4B" stroke-width="2"/>
+          <rect x="144" y="180" width="72" height="70" rx="9" fill="#111811" stroke="#0A150A" stroke-width="4"/>
+          <rect x="152" y="188" width="56" height="54" rx="5" fill="#0A120A"/>
+          <line x1="152" y1="215" x2="208" y2="215" stroke="#4B6B4B" stroke-width="1.5"/>
+          <line x1="180" y1="188" x2="180" y2="242" stroke="#4B6B4B" stroke-width="1.5"/>
+          <circle cx="180" cy="215" r="7" fill="none" stroke="#6EE7B7" stroke-width="2"/>
+          <circle cx="180" cy="215" r="3" fill="#6EE7B7"/>
+          <path id="route-jeep" d="M158 236 Q170 220 180 215 Q192 207 200 194" stroke="#FDE68A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <circle cx="200" cy="194" r="4" fill="#FDE68A"/>
+          <circle cx="266" cy="213" r="30" fill="#1A271A" stroke="#0A150A" stroke-width="4"/>
+          <circle cx="266" cy="213" r="22" fill="#111811"/>
+          <path id="needle-jeep-r" d="M266 213L282 195" stroke="#FB923C" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="266" cy="213" r="5" fill="#4B6B4B"/>
+          <line x1="240" y1="199" x2="247" y2="205" stroke="#4B6B4B" stroke-width="2"/>
+          <line x1="266" y1="186" x2="266" y2="192" stroke="#4B6B4B" stroke-width="2"/>
+          <line x1="292" y1="199" x2="285" y2="205" stroke="#4B6B4B" stroke-width="2"/>
+          <rect x="44" y="248" width="38" height="10" rx="5" fill="#1A271A" stroke="#0A150A" stroke-width="3"/>
+          <line x1="54" y1="248" x2="54" y2="258" stroke="#0A150A" stroke-width="2"/>
+          <line x1="63" y1="248" x2="63" y2="258" stroke="#0A150A" stroke-width="2"/>
+          <line x1="72" y1="248" x2="72" y2="258" stroke="#0A150A" stroke-width="2"/>
+          <rect x="278" y="248" width="38" height="10" rx="5" fill="#1A271A" stroke="#0A150A" stroke-width="3"/>
+          <line x1="288" y1="248" x2="288" y2="258" stroke="#0A150A" stroke-width="2"/>
+          <line x1="297" y1="248" x2="297" y2="258" stroke="#0A150A" stroke-width="2"/>
+          <line x1="306" y1="248" x2="306" y2="258" stroke="#0A150A" stroke-width="2"/>
+        </g>
+        <g id="layer-4">
+          <circle cx="180" cy="318" r="30" fill="none" stroke="#0A150A" stroke-width="8"/>
+          <circle cx="180" cy="318" r="21" fill="none" stroke="#2D3B2D" stroke-width="3"/>
+          <circle cx="180" cy="318" r="8" fill="#2D3B2D" stroke="#0A150A" stroke-width="4"/>
+          <line x1="180" y1="288" x2="180" y2="310" stroke="#0A150A" stroke-width="6" stroke-linecap="round"/>
+          <line x1="154" y1="332" x2="166" y2="324" stroke="#0A150A" stroke-width="6" stroke-linecap="round"/>
+          <line x1="206" y1="332" x2="194" y2="324" stroke="#0A150A" stroke-width="6" stroke-linecap="round"/>
+          <circle id="horn-jeep" cx="180" cy="318" r="5" fill="#6EE7B7" stroke="#0A150A" stroke-width="2.5"/>
+        </g>
+        <rect id="sig-jeep-1" x="286" y="20" width="6" height="8" rx="2" fill="#6EE7B7"/>
+        <rect id="sig-jeep-2" x="295" y="15" width="6" height="13" rx="2" fill="#6EE7B7"/>
+        <rect id="sig-jeep-3" x="304" y="10" width="6" height="18" rx="2" fill="#6EE7B7"/>
+        <circle id="status-jeep" cx="344" cy="18" r="11" fill="#6EE7B7" stroke="#0A150A" stroke-width="4"/>
+        <rect id="slot-jeep" x="148" y="169" width="64" height="6" rx="3" fill="#0A150A" opacity="0"/>
+        <rect id="msg-jeep" x="154" y="150" width="52" height="14" rx="5" fill="#6EE7B7" opacity="0"/>
+        <g id="agent-driver">
+          <rect id="seat-jeep" x="110" y="158" width="140" height="20" rx="10" fill="#2D3B2D" stroke="#0A150A" stroke-width="3"/>
+          <rect x="88" y="144" width="130" height="24" rx="12" fill="#7A4A1A" stroke="#0A150A" stroke-width="4"/>
+          <line x1="153" y1="144" x2="153" y2="168" stroke="#0A150A" stroke-width="2.5" stroke-linecap="round"/>
+          <path id="arm-jeep-r" d="M200 158C214 164 222 178 216 188" stroke="#0A150A" stroke-width="12" stroke-linecap="round"/>
+          <circle id="hand-jeep-r" cx="214" cy="190" r="11" fill="#FFDAB8" stroke="#0A150A" stroke-width="3.5"/>
+          <ellipse id="head-jeep" cx="153" cy="104" rx="44" ry="54" fill="#FFDAB8" stroke="#0A150A" stroke-width="5"/>
+          <path id="hat-crown-jeep" d="M111 106 C107 92 109 68 118 55 C128 43 141 36 153 36 C165 36 178 43 188 55 C197 68 199 92 195 106 Z" fill="#7A4A1A" stroke="#0A150A" stroke-width="5" stroke-linejoin="round"/>
+          <rect id="hat-cuff-jeep" x="103" y="98" width="100" height="24" rx="12" fill="#5C3210" stroke="#0A150A" stroke-width="4"/>
+          <rect x="135" y="102" width="36" height="16" rx="3" fill="#F5F0E8" stroke="#0A150A" stroke-width="2"/>
+          <rect x="139" y="105" width="28" height="10" rx="2" fill="#C8860A"/>
+          <ellipse id="shades-jeep-l" cx="137" cy="118" rx="18" ry="16" fill="#1A271A" stroke="#0A150A" stroke-width="3.5"/>
+          <ellipse id="shades-jeep-r" cx="173" cy="118" rx="18" ry="16" fill="#1A271A" stroke="#0A150A" stroke-width="3.5"/>
+          <line x1="155" y1="118" x2="155" y2="118" stroke="#0A150A" stroke-width="4"/>
+          <line x1="119" y1="118" x2="111" y2="115" stroke="#0A150A" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="191" y1="118" x2="199" y2="115" stroke="#0A150A" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M123 107C126 103 132 102 136 105" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.85"/>
+          <circle cx="124" cy="109" r="1.5" fill="white" opacity="0.6"/>
+          <path d="M159 107C162 103 168 102 172 105" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.85"/>
+          <circle cx="160" cy="109" r="1.5" fill="white" opacity="0.6"/>
+          <ellipse id="mouth-jeep" cx="153" cy="136" rx="9" ry="11" fill="#0A150A"/>
+          <ellipse cx="153" cy="136" rx="7" ry="8.5" fill="#c0605a"/>
+        </g>
+        <g id="activity-jeep">
+          <circle id="activity-jeep-1" cx="286" cy="20" r="4" fill="#6EE7B7" opacity="0.4"/>
+        </g>
+        <rect id="err-flash-jeep" x="0" y="0" width="360" height="380" fill="#F87171" opacity="0"/>
+        <rect id="offline-overlay-jeep" x="0" y="0" width="360" height="380" fill="#000" opacity="0"/>
+      </svg>
+    </div>
+    <div class="room-log" id="log-jeep">
+      <span class="dot" id="dot-jeep"></span>
+      <span id="log-text-jeep">initialising…</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="controls">
+  <button class="ctrl-btn active" id="btn-auto">⟳ auto cycle</button>
+  <button class="ctrl-btn" id="btn-faster">2× speed</button>
+  <button class="ctrl-btn" id="btn-pause">⏸ pause</button>
+  <span class="cycle-speed" id="cycle-label">cycling every 2s</span>
+</div>
+
+<script>
+// ─── State definitions ───────────────────────────────────────────────────────
+const STATES_STANDARD = ['idle', 'working', 'error', 'offline'];
+const STATES_JEEP = ['idle', 'working', 'error', 'offline', 'clear', 'cloudy', 'rain', 'storm', 'fog'];
+
+const STATUS_COLORS = {
+  idle:    { fill: null,      label: '#6EE7B7' },
+  working: { fill: '#FDE68A', label: '#FDE68A' },
+  error:   { fill: '#F87171', label: '#F87171' },
+  offline: { fill: '#333',    label: '#555'    },
+  clear:   { fill: '#93C5FD', label: '#93C5FD' },
+  cloudy:  { fill: '#CBD5E1', label: '#CBD5E1' },
+  rain:    { fill: '#60A5FA', label: '#60A5FA' },
+  storm:   { fill: '#C084FC', label: '#C084FC' },
+  fog:     { fill: '#64748B', label: '#94A3B8' },
+};
+
+const LOGS = {
+  idle:    ['→ heartbeat ping', '← 200 OK', '→ status: nominal', '← uptime: 99.98%'],
+  working: ['→ task assigned', '← processing…', '→ chunk 4/8 complete', '← tokens: 1,204'],
+  error:   ['✗ exception thrown', '← stack trace captured', '→ retry #1', '✗ still failing'],
+  offline: ['⬡ connection lost', '— no response', '— last seen 0:04s ago', '— awaiting reconnect'],
+  clear:   ['→ wx: CAVOK', '← visibility: 10km', '→ ceiling: unlimited', '← wind: 5kt N'],
+  cloudy:  ['→ wx: BKN045', '← cloud cover: 6/8', '→ temp: 12°C', '← QNH: 1013'],
+  rain:    ['→ wx: -RA', '← precip: 2.4mm/h', '→ visibility: 4km', '← runway: wet'],
+  storm:   ['⚡ wx: TSRA', '← CB: embedded', '→ deviation requested', '← hold approved'],
+  fog:     ['→ wx: FG', '← visibility: 200m', '→ RVR: 300m', '← CAT III approach'],
+};
+
+const WX_SKY_COLORS = {
+  clear:  '#1A3A6A',
+  cloudy: '#3A4A5A',
+  rain:   '#2A3A4A',
+  storm:  '#1A0A2A',
+  fog:    '#4A4A4A',
+  idle:   '#1A3A4A',
+  working:'#1A3A4A',
+  error:  '#2A1A1A',
+  offline:'#0A0A0A',
+};
+
+// ─── GSAP animation timelines per room ───────────────────────────────────────
+let tls = { m4: null, m1: null, jeep: null };
+let currentStates = { m4: 'idle', m1: 'idle', jeep: 'idle' };
+let wxTimers = {};
+
+function killTl(room) {
+  if (tls[room]) { tls[room].kill(); tls[room] = null; }
+  if (wxTimers[room]) { clearTimeout(wxTimers[room]); wxTimers[room] = null; }
+}
+
+function getEl(id) { return document.getElementById(id); }
+
+function setRoomState(room, state) {
+  const prev = currentStates[room];
+  if (prev === state) return;
+  currentStates[room] = state;
+
+  killTl(room);
+
+  const suffix = room === 'jeep' ? '-jeep' : (room === 'm4' ? '-m4' : '-m1');
+  const badge = getEl('badge-' + room);
+  const logText = getEl('log-text-' + room);
+  const dot = getEl('dot-' + room);
+  const errFlash = getEl('err-flash' + suffix);
+  const offOverlay = getEl('offline-overlay' + suffix);
+  const statusEl = room === 'jeep' ? getEl('status-jeep') : getEl('status' + suffix);
+
+  // update badge
+  badge.textContent = state;
+  badge.setAttribute('data-state', state);
+
+  // update log
+  const logPool = LOGS[state] || LOGS.idle;
+  logText.textContent = logPool[Math.floor(Math.random() * logPool.length)];
+
+  // dot color
+  const sc = STATUS_COLORS[state];
+  dot.style.background = sc.label;
+
+  // status circle color
+  if (statusEl) {
+    const targetFill = sc.fill || (room === 'm4' ? '#F9A8D4' : room === 'm1' ? '#C4B5FD' : '#6EE7B7');
+    gsap.to(statusEl, { duration: 0.4, attr: { fill: targetFill } });
+  }
+
+  // clear overlays
+  gsap.set(errFlash, { opacity: 0 });
+  gsap.set(offOverlay, { opacity: 0 });
+
+  // restore opacities from previous offline/error
+  if (room !== 'jeep') {
+    const head = getEl('head-' + room);
+    const lamp = getEl('lamp-' + room);
+    if (head) gsap.to(head, { duration: 0.4, opacity: 1 });
+    if (lamp) gsap.to(lamp, { duration: 0.4, opacity: 1 });
+  } else {
+    const headJ = getEl('head-jeep');
+    const ndlL = getEl('needle-jeep-l');
+    const ndlR = getEl('needle-jeep-r');
+    if (headJ) gsap.to(headJ, { duration: 0.4, opacity: 1 });
+    if (ndlL) gsap.to(ndlL, { duration: 0.4, opacity: 1 });
+    if (ndlR) gsap.to(ndlR, { duration: 0.4, opacity: 1 });
+  }
+
+  // hide msg
+  const msgEl = getEl('msg' + suffix);
+  if (msgEl) gsap.to(msgEl, { duration: 0.2, opacity: 0 });
+
+  // ── build GSAP timeline ──
+  const tl = gsap.timeline({ repeat: -1 });
+  tls[room] = tl;
+
+  if (state === 'error') {
+    // flash overlay + shake
+    tl.to(errFlash, { duration: 0.08, opacity: 0.18, yoyo: true, repeat: -1, ease: 'none' });
+    if (msgEl) gsap.to(msgEl, { duration: 0.3, opacity: 1, delay: 0.1 });
+    // update log on each "cycle"
+    startLogCycler(room, state);
+
+  } else if (state === 'offline') {
+    gsap.to(offOverlay, { duration: 0.6, opacity: 0.55 });
+    startLogCycler(room, state);
+
+  } else if (state === 'working') {
+    if (room !== 'jeep') {
+      // animate progress bars
+      animateProgressBars(room, tl);
+    } else {
+      // fast needle sweep
+      const ndlL = getEl('needle-jeep-l');
+      const ndlR = getEl('needle-jeep-r');
+      if (ndlL) tl.to(ndlL, { duration: 0.8, rotate: 30, transformOrigin: '94px 213px', yoyo: true, repeat: -1, ease: 'power1.inOut' }, 0);
+      if (ndlR) tl.to(ndlR, { duration: 0.6, rotate: -25, transformOrigin: '266px 213px', yoyo: true, repeat: -1, ease: 'power1.inOut' }, 0);
+    }
+    startLogCycler(room, state);
+
+  } else if (state === 'idle') {
+    if (room !== 'jeep') {
+      // gentle needle / bar drift
+      const bars = room === 'm4'
+        ? ['bar-m4-1a','bar-m4-1b','bar-m4-1c','bar-m4-1d','bar-m4-1e','bar-m4-1f']
+        : [];
+      bars.forEach((id, i) => {
+        const el = getEl(id);
+        if (el) tl.to(el, { duration: 1.2 + i * 0.15, scaleY: 0.4 + Math.random() * 0.9, transformOrigin: 'bottom', yoyo: true, repeat: -1, ease: 'sine.inOut' }, i * 0.1);
+      });
+    } else {
+      const ndlL = getEl('needle-jeep-l');
+      const ndlR = getEl('needle-jeep-r');
+      if (ndlL) tl.to(ndlL, { duration: 2.5, rotate: 8, transformOrigin: '94px 213px', yoyo: true, repeat: -1, ease: 'sine.inOut' }, 0);
+      if (ndlR) tl.to(ndlR, { duration: 2.8, rotate: -8, transformOrigin: '266px 213px', yoyo: true, repeat: -1, ease: 'sine.inOut' }, 0);
+    }
+    startLogCycler(room, state);
+  }
+
+  // JEEP weather sky tint
+  if (room === 'jeep') {
+    applyWeatherFx(state, tl);
+  }
+}
+
+function animateProgressBars(room, tl) {
+  const ids = room === 'm4'
+    ? ['prog-m4-2a','prog-m4-2b','prog-m4-2c','prog-m4-3a','prog-m4-3b','prog-m4-3c']
+    : ['prog-m1-2a','prog-m1-2b','prog-m1-2c','prog-m1-3a','prog-m1-3b','prog-m1-3c'];
+  ids.forEach((id, i) => {
+    const el = getEl(id);
+    if (!el) return;
+    const maxW = 72;
+    tl.to(el, {
+      duration: 1.5 + Math.random(),
+      attr: { width: 10 + Math.random() * maxW },
+      yoyo: true, repeat: -1, ease: 'power1.inOut',
+      delay: i * 0.18
+    }, i * 0.15);
+  });
+}
+
+// weather FX on JEEP window
+function applyWeatherFx(state, tl) {
+  const sky = getEl('wx-sky-jeep');
+  const overlay = getEl('wx-overlay-jeep');
+  if (!sky || !overlay) return;
+
+  // clear existing weather elements
+  while (overlay.firstChild) overlay.removeChild(overlay.firstChild);
+
+  const col = WX_SKY_COLORS[state] || '#1A3A4A';
+  gsap.to(sky, { duration: 0.6, attr: { fill: col } });
+
+  const ns = 'http://www.w3.org/2000/svg';
+
+  if (state === 'rain' || state === 'storm') {
+    // rain drops
+    for (let i = 0; i < 14; i++) {
+      const line = document.createElementNS(ns, 'line');
+      const x = 48 + Math.random() * 268;
+      const y = 20 + Math.random() * 80;
+      line.setAttribute('x1', x); line.setAttribute('y1', y);
+      line.setAttribute('x2', x - 2); line.setAttribute('y2', y + 10);
+      line.setAttribute('stroke', state === 'storm' ? '#C084FC' : '#93C5FD');
+      line.setAttribute('stroke-width', '1.5');
+      line.setAttribute('opacity', '0.7');
+      overlay.appendChild(line);
+      tl.to(line, {
+        duration: 0.5 + Math.random() * 0.4,
+        attr: { y1: y + 50, y2: y + 60 },
+        opacity: 0,
+        repeat: -1,
+        ease: 'none',
+        delay: Math.random() * 0.8
+      }, 0);
+    }
+  }
+
+  if (state === 'storm') {
+    // lightning bolt
+    const bolt = document.createElementNS(ns, 'polyline');
+    bolt.setAttribute('points', '190,22 183,42 190,42 183,62');
+    bolt.setAttribute('stroke', '#FDE68A');
+    bolt.setAttribute('stroke-width', '3');
+    bolt.setAttribute('fill', 'none');
+    bolt.setAttribute('opacity', '0');
+    overlay.appendChild(bolt);
+    tl.to(bolt, { duration: 0.08, opacity: 1, yoyo: true, repeat: -1, repeatDelay: 2.2, ease: 'none' }, 0.3);
+  }
+
+  if (state === 'fog') {
+    // fog bands
+    for (let i = 0; i < 4; i++) {
+      const rect = document.createElementNS(ns, 'rect');
+      const y = 30 + i * 22;
+      rect.setAttribute('x', '44'); rect.setAttribute('y', y);
+      rect.setAttribute('width', '272'); rect.setAttribute('height', '12');
+      rect.setAttribute('rx', '6');
+      rect.setAttribute('fill', '#94A3B8');
+      rect.setAttribute('opacity', '0.18');
+      overlay.appendChild(rect);
+      tl.to(rect, {
+        duration: 2.5 + i * 0.4,
+        x: -10 + Math.random() * 20,
+        opacity: 0.08 + Math.random() * 0.18,
+        yoyo: true, repeat: -1, ease: 'sine.inOut',
+        delay: i * 0.3
+      }, 0);
+    }
+  }
+
+  if (state === 'cloudy') {
+    // cloud puffs
+    for (let i = 0; i < 3; i++) {
+      const cx = 100 + i * 80;
+      const cy = 45;
+      const c = document.createElementNS(ns, 'circle');
+      c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', 18);
+      c.setAttribute('fill', '#CBD5E1'); c.setAttribute('opacity', '0.35');
+      overlay.appendChild(c);
+      tl.to(c, { duration: 3 + i, x: 5, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: i * 0.5 }, 0);
+    }
+  }
+
+  if (state === 'clear') {
+    // sun
+    const sun = document.createElementNS(ns, 'circle');
+    sun.setAttribute('cx', '220'); sun.setAttribute('cy', '38'); sun.setAttribute('r', '14');
+    sun.setAttribute('fill', '#FDE68A'); sun.setAttribute('opacity', '0.55');
+    overlay.appendChild(sun);
+    tl.to(sun, { duration: 3, opacity: 0.7, r: 15, attr: { r: 15 }, yoyo: true, repeat: -1, ease: 'sine.inOut' }, 0);
+  }
+}
+
+// ─── Log cycler ──────────────────────────────────────────────────────────────
+let logIntervals = {};
+function startLogCycler(room, state) {
+  clearInterval(logIntervals[room]);
+  logIntervals[room] = setInterval(() => {
+    const logText = getEl('log-text-' + room);
+    const pool = LOGS[currentStates[room]] || LOGS.idle;
+    logText.style.opacity = 0;
+    setTimeout(() => {
+      logText.textContent = pool[Math.floor(Math.random() * pool.length)];
+      logText.style.transition = 'opacity 0.3s';
+      logText.style.opacity = 1;
+    }, 160);
+  }, 1800);
+}
+
+// ─── Mock cycler ─────────────────────────────────────────────────────────────
+let cycleInterval = null;
+let cycleSpeed = 2000;
+let paused = false;
+
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function runCycle() {
+  setRoomState('m4',   pickRandom(STATES_STANDARD));
+  setRoomState('m1',   pickRandom(STATES_STANDARD));
+  setRoomState('jeep', pickRandom(STATES_JEEP));
+}
+
+function startCycler(ms) {
+  clearInterval(cycleInterval);
+  cycleSpeed = ms;
+  cycleInterval = setInterval(runCycle, ms);
+  document.getElementById('cycle-label').textContent = `cycling every ${ms >= 1000 ? ms/1000 + 's' : ms + 'ms'}`;
+}
+
+// controls
+document.getElementById('btn-auto').addEventListener('click', () => {
+  paused = false;
+  document.getElementById('btn-pause').textContent = '⏸ pause';
+  startCycler(2000);
+  document.getElementById('btn-faster').classList.remove('active');
+  document.getElementById('btn-auto').classList.add('active');
+});
+
+document.getElementById('btn-faster').addEventListener('click', function() {
+  paused = false;
+  document.getElementById('btn-pause').textContent = '⏸ pause';
+  const fast = !this.classList.contains('active');
+  this.classList.toggle('active', fast);
+  document.getElementById('btn-auto').classList.toggle('active', !fast);
+  startCycler(fast ? 800 : 2000);
+});
+
+document.getElementById('btn-pause').addEventListener('click', function() {
+  paused = !paused;
+  if (paused) {
+    clearInterval(cycleInterval);
+    this.textContent = '▶ resume';
+    document.getElementById('cycle-label').textContent = 'paused';
+    document.getElementById('btn-auto').classList.remove('active');
+  } else {
+    this.textContent = '⏸ pause';
+    startCycler(cycleSpeed);
+    document.getElementById('btn-auto').classList.add('active');
+  }
+});
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+setRoomState('m4',   'idle');
+setRoomState('m1',   'working');
+setRoomState('jeep', 'clear');
+
+setTimeout(() => startCycler(2000), 500);
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<svg id="room-jeep" viewBox="0 0 360 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g id="layer-1">
+    <rect width="360" height="380" fill="#1C2B1C"></rect>
+    <rect x="0" y="0" width="360" height="54" fill="#2D3B2D"></rect>
+    <rect x="0" y="0" width="34" height="380" fill="#1A271A" stroke="#0A150A" stroke-width="3"></rect>
+    <rect x="326" y="0" width="34" height="380" fill="#1A271A" stroke="#0A150A" stroke-width="3"></rect>
+  </g>
+  <g id="layer-2">
+    
+    <rect x="34" y="10" width="292" height="116" rx="14" fill="#4B6B4B" stroke="#0A150A" stroke-width="5"></rect>
+    
+    <rect id="wx-sky-jeep" x="44" y="20" width="272" height="100" rx="10" fill="#1A3A4A"></rect>
+    
+    <rect x="44" y="20" width="272" height="64" fill="#1A3A4A"></rect>
+    <rect x="44" y="74" width="272" height="46" fill="#1B4A1B"></rect>
+    <rect x="44" y="20" width="272" height="28" fill="#2D4A6A" opacity="0.5"></rect>
+    <rect x="126" y="92" width="108" height="28" fill="#263238"></rect>
+    
+    <circle cx="72" cy="72" r="18" fill="#1B4A1B"></circle>
+    <circle cx="62" cy="64" r="12" fill="#1E5C1E"></circle>
+    <circle cx="82" cy="64" r="14" fill="#215E21"></circle>
+    <circle cx="72" cy="56" r="10" fill="#256225"></circle>
+    <circle cx="100" cy="60" r="22" fill="#1A4A1A"></circle>
+    <circle cx="90" cy="52" r="15" fill="#1E5C1E"></circle>
+    <circle cx="110" cy="54" r="16" fill="#215E21"></circle>
+    
+    <circle cx="264" cy="70" r="20" fill="#1B4A1B"></circle>
+    <circle cx="254" cy="62" r="14" fill="#1E5C1E"></circle>
+    <circle cx="276" cy="64" r="16" fill="#215E21"></circle>
+    <circle cx="290" cy="60" r="20" fill="#1A4A1A"></circle>
+    <circle cx="280" cy="52" r="16" fill="#1E5C1E"></circle>
+    
+    <rect x="44" y="20" width="272" height="100" rx="10" fill="#0A1A0A" opacity="0.4"></rect>
+  </g>
+  <g id="layer-3">
+    
+    <rect x="34" y="172" width="292" height="86" rx="12" fill="#2D3B2D" stroke="#0A150A" stroke-width="5"></rect>
+    <rect x="34" y="172" width="292" height="20" rx="12" fill="#1A271A" stroke="#0A150A" stroke-width="4"></rect>
+    
+    <circle cx="94" cy="213" r="30" fill="#1A271A" stroke="#0A150A" stroke-width="4"></circle>
+    <circle cx="94" cy="213" r="22" fill="#111811"></circle>
+    <path id="needle-jeep-l" d="M94 213L78 195" stroke="#6EE7B7" stroke-width="4" stroke-linecap="round"></path>
+    <circle cx="94" cy="213" r="5" fill="#4B6B4B"></circle>
+    <line x1="68" y1="199" x2="75" y2="205" stroke="#4B6B4B" stroke-width="2"></line>
+    <line x1="94" y1="186" x2="94" y2="192" stroke="#4B6B4B" stroke-width="2"></line>
+    <line x1="120" y1="199" x2="113" y2="205" stroke="#4B6B4B" stroke-width="2"></line>
+    
+    <rect x="144" y="180" width="72" height="70" rx="9" fill="#111811" stroke="#0A150A" stroke-width="4"></rect>
+    <rect x="152" y="188" width="56" height="54" rx="5" fill="#0A120A"></rect>
+    <line x1="152" y1="215" x2="208" y2="215" stroke="#4B6B4B" stroke-width="1.5"></line>
+    <line x1="180" y1="188" x2="180" y2="242" stroke="#4B6B4B" stroke-width="1.5"></line>
+    <circle cx="180" cy="215" r="7" fill="none" stroke="#6EE7B7" stroke-width="2"></circle>
+    <circle cx="180" cy="215" r="3" fill="#6EE7B7"></circle>
+    <path id="route-jeep" d="M158 236 Q170 220 180 215 Q192 207 200 194" stroke="#FDE68A" stroke-width="2.5" stroke-linecap="round" fill="none"></path>
+    <circle cx="200" cy="194" r="4" fill="#FDE68A"></circle>
+    
+    <circle cx="266" cy="213" r="30" fill="#1A271A" stroke="#0A150A" stroke-width="4"></circle>
+    <circle cx="266" cy="213" r="22" fill="#111811"></circle>
+    <path id="needle-jeep-r" d="M266 213L282 195" stroke="#FB923C" stroke-width="4" stroke-linecap="round"></path>
+    <circle cx="266" cy="213" r="5" fill="#4B6B4B"></circle>
+    <line x1="240" y1="199" x2="247" y2="205" stroke="#4B6B4B" stroke-width="2"></line>
+    <line x1="266" y1="186" x2="266" y2="192" stroke="#4B6B4B" stroke-width="2"></line>
+    <line x1="292" y1="199" x2="285" y2="205" stroke="#4B6B4B" stroke-width="2"></line>
+    
+    <rect x="44" y="248" width="38" height="10" rx="5" fill="#1A271A" stroke="#0A150A" stroke-width="3"></rect>
+    <line x1="54" y1="248" x2="54" y2="258" stroke="#0A150A" stroke-width="2"></line>
+    <line x1="63" y1="248" x2="63" y2="258" stroke="#0A150A" stroke-width="2"></line>
+    <line x1="72" y1="248" x2="72" y2="258" stroke="#0A150A" stroke-width="2"></line>
+    <rect x="278" y="248" width="38" height="10" rx="5" fill="#1A271A" stroke="#0A150A" stroke-width="3"></rect>
+    <line x1="288" y1="248" x2="288" y2="258" stroke="#0A150A" stroke-width="2"></line>
+    <line x1="297" y1="248" x2="297" y2="258" stroke="#0A150A" stroke-width="2"></line>
+    <line x1="306" y1="248" x2="306" y2="258" stroke="#0A150A" stroke-width="2"></line>
+  </g>
+  <g id="layer-4">
+    
+    <circle cx="180" cy="318" r="30" fill="none" stroke="#0A150A" stroke-width="8"></circle>
+    <circle cx="180" cy="318" r="21" fill="none" stroke="#2D3B2D" stroke-width="3"></circle>
+    <circle cx="180" cy="318" r="8" fill="#2D3B2D" stroke="#0A150A" stroke-width="4"></circle>
+    <line x1="180" y1="288" x2="180" y2="310" stroke="#0A150A" stroke-width="6" stroke-linecap="round"></line>
+    <line x1="154" y1="332" x2="166" y2="324" stroke="#0A150A" stroke-width="6" stroke-linecap="round"></line>
+    <line x1="206" y1="332" x2="194" y2="324" stroke="#0A150A" stroke-width="6" stroke-linecap="round"></line>
+    <circle id="horn-jeep" cx="180" cy="318" r="5" fill="#6EE7B7" stroke="#0A150A" stroke-width="2.5"></circle>
+  </g>
+  
+  <rect id="sig-jeep-1" x="286" y="20" width="6" height="8" rx="2" fill="#6EE7B7"></rect>
+  <rect id="sig-jeep-2" x="295" y="15" width="6" height="13" rx="2" fill="#6EE7B7"></rect>
+  <rect id="sig-jeep-3" x="304" y="10" width="6" height="18" rx="2" fill="#6EE7B7"></rect>
+  <circle id="status-jeep" cx="344" cy="18" r="11" fill="#6EE7B7" stroke="#0A150A" stroke-width="4"></circle>
+  
+  <rect id="slot-jeep" x="148" y="169" width="64" height="6" rx="3" fill="#0A150A" opacity="0"></rect>
+  <rect id="msg-jeep" x="154" y="150" width="52" height="14" rx="5" fill="#6EE7B7" opacity="0"></rect>
+  
+  <g id="agent-driver">
+    <rect id="seat-jeep" x="110" y="158" width="140" height="20" rx="10" fill="#2D3B2D" stroke="#0A150A" stroke-width="3"></rect>
+    <rect x="88" y="144" width="130" height="24" rx="12" fill="#7A4A1A" stroke="#0A150A" stroke-width="4"></rect>
+    <line x1="153" y1="144" x2="153" y2="168" stroke="#0A150A" stroke-width="2.5" stroke-linecap="round"></line>
+    <path id="arm-jeep-r" d="M200 158C214 164 222 178 216 188" stroke="#0A150A" stroke-width="12" stroke-linecap="round"></path>
+    <circle id="hand-jeep-r" cx="214" cy="190" r="11" fill="#FFDAB8" stroke="#0A150A" stroke-width="3.5"></circle>
+    <ellipse id="head-jeep" cx="153" cy="104" rx="44" ry="54" fill="#FFDAB8" stroke="#0A150A" stroke-width="5"></ellipse>
+    <path id="hat-crown-jeep" d="M111 106 C107 92 109 68 118 55 C128 43 141 36 153 36 C165 36 178 43 188 55 C197 68 199 92 195 106 Z" fill="#7A4A1A" stroke="#0A150A" stroke-width="5" stroke-linejoin="round"></path>
+    <rect id="hat-cuff-jeep" x="103" y="98" width="100" height="24" rx="12" fill="#5C3210" stroke="#0A150A" stroke-width="4"></rect>
+    <rect x="135" y="102" width="36" height="16" rx="3" fill="#F5F0E8" stroke="#0A150A" stroke-width="2"></rect>
+    <rect x="139" y="105" width="28" height="10" rx="2" fill="#C8860A"></rect>
+    
+    <ellipse id="shades-jeep-l" cx="137" cy="118" rx="18" ry="16" fill="#1A271A" stroke="#0A150A" stroke-width="3.5"></ellipse>
+    <ellipse id="shades-jeep-r" cx="173" cy="118" rx="18" ry="16" fill="#1A271A" stroke="#0A150A" stroke-width="3.5"></ellipse>
+    <line x1="155" y1="118" x2="155" y2="118" stroke="#0A150A" stroke-width="4"></line>
+    <line x1="119" y1="118" x2="111" y2="115" stroke="#0A150A" stroke-width="3.5" stroke-linecap="round"></line>
+    <line x1="191" y1="118" x2="199" y2="115" stroke="#0A150A" stroke-width="3.5" stroke-linecap="round"></line>
+    <path d="M123 107C126 103 132 102 136 105" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.85"></path>
+    <circle cx="124" cy="109" r="1.5" fill="white" opacity="0.6"></circle>
+    <path d="M159 107C162 103 168 102 172 105" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.85"></path>
+    <circle cx="160" cy="109" r="1.5" fill="white" opacity="0.6"></circle>
+    <ellipse id="mouth-jeep" cx="153" cy="136" rx="9" ry="11" fill="#0A150A"></ellipse>
+    <ellipse cx="153" cy="136" rx="7" ry="8.5" fill="#c0605a"></ellipse>
+  </g>
+  <g id="activity-jeep">
+    <circle id="activity-jeep-1" cx="286" cy="20" r="4" fill="#6EE7B7" opacity="0.4"></circle>
+  </g>
+</svg>

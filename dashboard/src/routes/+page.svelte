@@ -26,8 +26,15 @@
 
 <main>
   <header>
-    <h1>⚡ TOWPATH</h1>
-    <span class="subtitle">OpenClaw Fleet</span>
+    <div class="header-top">
+      <div>
+        <h1>⚡ TOWPATH</h1>
+        <span class="subtitle">OpenClaw Fleet</span>
+      </div>
+      <nav class="nav-links">
+        <a href="/rooms.html">Open ROOMS Demo</a>
+      </nav>
+    </div>
   </header>
 
   <section class="nodes">
@@ -79,6 +86,13 @@
     margin-bottom: 2rem;
   }
 
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
   h1 {
     margin: 0;
     font-size: 2rem;
@@ -88,6 +102,20 @@
   .subtitle {
     color: #666;
     font-size: 0.9rem;
+  }
+
+  .nav-links a {
+    color: #00ff88;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border: 1px solid #1f3;
+    padding: 0.55rem 0.8rem;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .nav-links a:hover {
+    background: #0f1a12;
   }
 
   .nodes {

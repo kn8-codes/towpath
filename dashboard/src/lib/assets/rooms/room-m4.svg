@@ -1,0 +1,115 @@
+<svg id="room-m4" viewBox="0 0 360 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+  
+  <g id="layer-1">
+    <rect width="360" height="380" fill="#F9A8D4"></rect>
+    <rect x="0" y="0" width="360" height="220" fill="#FCE7F3"></rect>
+    <rect x="0" y="220" width="360" height="160" fill="#EC4899"></rect>
+    <rect x="0" y="220" width="360" height="10" fill="#DB2777"></rect>
+  </g>
+  
+  <g id="layer-2">
+    <rect x="10" y="12" width="340" height="10" rx="5" fill="#BE185D" stroke="#831843" stroke-width="3"></rect>
+    
+    <rect x="10" y="20" width="100" height="72" rx="9" fill="#BE185D" stroke="#831843" stroke-width="4"></rect>
+    <rect x="18" y="28" width="84" height="54" rx="6" fill="#1a0a12"></rect>
+    <rect id="bar-m4-1a" x="24" y="68" width="10" height="8" rx="2" fill="#F472B6"></rect>
+    <rect id="bar-m4-1b" x="36" y="60" width="10" height="16" rx="2" fill="#EC4899"></rect>
+    <rect id="bar-m4-1c" x="48" y="52" width="10" height="24" rx="2" fill="#F472B6"></rect>
+    <rect id="bar-m4-1d" x="60" y="44" width="10" height="32" rx="2" fill="#EC4899"></rect>
+    <rect id="bar-m4-1e" x="72" y="56" width="10" height="20" rx="2" fill="#F472B6"></rect>
+    <rect id="bar-m4-1f" x="84" y="48" width="10" height="28" rx="2" fill="#EC4899"></rect>
+    <rect x="24" y="34" width="40" height="5" rx="2" fill="#F9A8D4" opacity="0.6"></rect>
+    
+    <rect x="130" y="20" width="100" height="72" rx="9" fill="#BE185D" stroke="#831843" stroke-width="4"></rect>
+    <rect x="138" y="28" width="84" height="54" rx="6" fill="#1a0a12"></rect>
+    <rect x="144" y="36" width="72" height="9" rx="4" fill="#3a0a20"></rect>
+    <rect id="prog-m4-2a" x="144" y="36" width="54" height="9" rx="4" fill="#F9A8D4"></rect>
+    <rect x="144" y="49" width="72" height="9" rx="4" fill="#3a0a20"></rect>
+    <rect id="prog-m4-2b" x="144" y="49" width="30" height="9" rx="4" fill="#F472B6"></rect>
+    <rect x="144" y="62" width="72" height="9" rx="4" fill="#3a0a20"></rect>
+    <rect id="prog-m4-2c" x="144" y="62" width="60" height="9" rx="4" fill="#F9A8D4"></rect>
+    
+    <rect x="250" y="20" width="100" height="72" rx="9" fill="#BE185D" stroke="#831843" stroke-width="4"></rect>
+    <rect x="258" y="28" width="84" height="54" rx="6" fill="#1a0a12"></rect>
+    <rect x="264" y="36" width="72" height="9" rx="4" fill="#3a0a20"></rect>
+    <rect id="prog-m4-3a" x="264" y="36" width="42" height="9" rx="4" fill="#F472B6"></rect>
+    <rect x="264" y="49" width="72" height="9" rx="4" fill="#3a0a20"></rect>
+    <rect id="prog-m4-3b" x="264" y="49" width="66" height="9" rx="4" fill="#F9A8D4"></rect>
+    <rect x="264" y="62" width="72" height="9" rx="4" fill="#3a0a20"></rect>
+    <rect id="prog-m4-3c" x="264" y="62" width="26" height="9" rx="4" fill="#F472B6"></rect>
+  </g>
+  
+  <g id="layer-3">
+    <rect x="60" y="106" width="240" height="28" rx="12" fill="#BE185D" stroke="#831843" stroke-width="4"></rect>
+    <circle id="btn-m4-1" cx="88" cy="120" r="9" fill="#F9A8D4" stroke="#831843" stroke-width="3"></circle>
+    <circle id="btn-m4-2" cx="112" cy="120" r="9" fill="#FDE68A" stroke="#831843" stroke-width="3"></circle>
+    <circle id="btn-m4-3" cx="136" cy="120" r="9" fill="#F472B6" stroke="#831843" stroke-width="3"></circle>
+    <rect x="156" y="112" width="72" height="16" rx="7" fill="#1a0a12"></rect>
+    <rect id="readout-m4-1" x="160" y="116" width="36" height="5" rx="2" fill="#F472B6"></rect>
+    
+    <rect x="14" y="170" width="332" height="50" rx="14" fill="#BE185D" stroke="#831843" stroke-width="5"></rect>
+    <rect x="14" y="170" width="332" height="12" rx="14" fill="#9D174D" stroke="#831843" stroke-width="3"></rect>
+    <rect x="32" y="218" width="20" height="56" rx="10" fill="#9D174D" stroke="#831843" stroke-width="4"></rect>
+    <rect x="308" y="218" width="20" height="56" rx="10" fill="#9D174D" stroke="#831843" stroke-width="4"></rect>
+    <rect x="126" y="178" width="108" height="28" rx="7" fill="#1a0a12" stroke="#831843" stroke-width="3"></rect>
+    <rect x="132" y="184" width="96" height="6" rx="3" fill="#BE185D" opacity="0.6"></rect>
+    <rect x="132" y="193" width="96" height="6" rx="3" fill="#BE185D" opacity="0.5"></rect>
+    <ellipse cx="272" cy="192" rx="16" ry="21" fill="#1a0a12" stroke="#831843" stroke-width="3"></ellipse>
+    
+    <path d="M52 210 L56 178 L72 178 L76 210 Z" fill="#FDDBA8" stroke="#831843" stroke-width="2.5" stroke-linejoin="round"></path>
+    <path d="M54 206 L57 186 L71 186 L74 206 Z" fill="#C084FC" opacity="0.85"></path>
+    <circle cx="60" cy="204" r="3" fill="#3D1A00"></circle>
+    <circle cx="65" cy="206" r="3" fill="#3D1A00"></circle>
+    <circle cx="70" cy="204" r="3" fill="#3D1A00"></circle>
+    <ellipse cx="64" cy="178" rx="10" ry="4" fill="#FDDBA8" stroke="#831843" stroke-width="2"></ellipse>
+    <path d="M54 178 Q64 172 74 178" fill="#FDDBA8" stroke="#831843" stroke-width="2"></path>
+    <rect id="straw-m4" x="67" y="152" width="5" height="28" rx="2.5" fill="#F472B6" stroke="#831843" stroke-width="1.5"></rect>
+  </g>
+  
+  <g id="light-m4">
+    <circle id="lamp-m4" cx="180" cy="8" r="7" fill="#FDE68A" stroke="#831843" stroke-width="2"></circle>
+  </g>
+  <circle id="status-m4" cx="344" cy="18" r="11" fill="#F9A8D4" stroke="#831843" stroke-width="4"></circle>
+  
+  <rect id="slot-m4" x="148" y="167" width="64" height="6" rx="3" fill="#831843" opacity="0"></rect>
+  <rect id="msg-m4" x="154" y="148" width="52" height="14" rx="5" fill="#F472B6" opacity="0"></rect>
+  
+  <g id="agent-operator">
+    <ellipse id="chair-m4" cx="180" cy="368" rx="50" ry="14" fill="#9D174D" stroke="#831843" stroke-width="4"></ellipse>
+    <ellipse cx="180" cy="340" rx="36" ry="38" fill="#7A4A1A" stroke="#111" stroke-width="5"></ellipse>
+    <path d="M180 304 C170 304 154 308 148 318 C142 328 144 346 146 358 C154 362 166 364 180 364 Z" fill="#8B5520" stroke="#111" stroke-width="3"></path>
+    <path d="M180 304 C190 304 206 308 212 318 C218 328 216 346 214 358 C206 362 194 364 180 364 Z" fill="#8B5520" stroke="#111" stroke-width="3"></path>
+    <line x1="180" y1="304" x2="180" y2="364" stroke="#111" stroke-width="3" stroke-linecap="round"></line>
+    <path d="M180 304 C174 300 163 302 159 310" stroke="#111" stroke-width="3" stroke-linecap="round" fill="none"></path>
+    <path d="M180 304 C186 300 197 302 201 310" stroke="#111" stroke-width="3" stroke-linecap="round" fill="none"></path>
+    <path id="arm-m4-l" d="M146 336C132 330 120 322 108 319" stroke="#111" stroke-width="13" stroke-linecap="round"></path>
+    <circle id="hand-m4-l" cx="104" cy="318" r="12" fill="#FFDAB8" stroke="#111" stroke-width="4"></circle>
+    <path id="arm-m4-r" d="M214 336C228 330 240 322 252 319" stroke="#111" stroke-width="13" stroke-linecap="round"></path>
+    <circle id="hand-m4-r" cx="256" cy="318" r="12" fill="#FFDAB8" stroke="#111" stroke-width="4"></circle>
+    <ellipse id="head-m4" cx="180" cy="278" rx="44" ry="54" fill="#FFDAB8" stroke="#111" stroke-width="5"></ellipse>
+    <path id="hat-crown-m4" d="M138 280 C134 266 136 242 145 229 C155 217 168 210 180 210 C192 210 205 217 215 229 C224 242 226 266 222 280 Z" fill="#7A4A1A" stroke="#111" stroke-width="5" stroke-linejoin="round"></path>
+    <rect id="hat-cuff-m4" x="130" y="272" width="100" height="24" rx="12" fill="#5C3210" stroke="#111" stroke-width="4"></rect>
+    <rect x="162" y="276" width="36" height="16" rx="3" fill="#F5F0E8" stroke="#111" stroke-width="2"></rect>
+    <rect x="166" y="279" width="28" height="10" rx="2" fill="#C8860A"></rect>
+    <ellipse id="eye-m4-l" cx="162" cy="296" rx="16" ry="17" fill="white" stroke="#111" stroke-width="3"></ellipse>
+    <ellipse cx="160" cy="294" rx="11" ry="11" fill="#7C3AED"></ellipse>
+    <ellipse cx="160" cy="294" rx="6" ry="6" fill="#111"></ellipse>
+    <circle cx="155" cy="290" r="4" fill="white"></circle>
+    <circle cx="163" cy="298" r="2" fill="white"></circle>
+    <path d="M147 287C153 282 162 283 167 287" stroke="#111" stroke-width="3.5" stroke-linecap="round" fill="none"></path>
+    <ellipse id="eye-m4-r" cx="198" cy="296" rx="16" ry="17" fill="white" stroke="#111" stroke-width="3"></ellipse>
+    <ellipse cx="200" cy="294" rx="11" ry="11" fill="#7C3AED"></ellipse>
+    <ellipse cx="200" cy="294" rx="6" ry="6" fill="#111"></ellipse>
+    <circle cx="195" cy="290" r="4" fill="white"></circle>
+    <circle cx="203" cy="298" r="2" fill="white"></circle>
+    <path d="M193 287C197 283 206 282 212 287" stroke="#111" stroke-width="3.5" stroke-linecap="round" fill="none"></path>
+    <ellipse id="mouth-m4" cx="180" cy="316" rx="9" ry="11" fill="#111"></ellipse>
+    <ellipse cx="180" cy="316" rx="7" ry="8.5" fill="#c0605a"></ellipse>
+  </g>
+  
+  <g id="activity-m4">
+    <circle id="activity-m4-1" cx="144" cy="120" r="5" fill="#F9A8D4" opacity="0.4"></circle>
+    <circle id="activity-m4-2" cx="160" cy="120" r="5" fill="#F9A8D4" opacity="0.4"></circle>
+    <circle id="activity-m4-3" cx="176" cy="120" r="5" fill="#F9A8D4" opacity="0.4"></circle>
+  </g>
+</svg>
